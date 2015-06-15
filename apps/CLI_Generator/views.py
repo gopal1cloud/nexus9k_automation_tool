@@ -28,7 +28,9 @@ def download_nexus_config_generator(request):
 def convert_nexus_config_puppet(request):
 	if request.method == "GET":
 		commands = []
-		code_file_content = request.GET["code_file_content"]
+		code_classname = request.GET["puppet_code_classname"]
+		code_filename = request.GET["puppet_code_filename"]
+		code_file_content = request.GET["puppet_code_file_content"]
 		file_data = code_file_content.replace(r"\r\n", r"\n")
 		formated_data = str("\n".join(file_data.splitlines()))
 		
@@ -36,7 +38,7 @@ def convert_nexus_config_puppet(request):
 			li = line.strip()
 			commands.append(li)
 			
-		puppet_file = "class cisco_onep::NX_Config {"+"\n"
+		puppet_file = "class cisco_onep::"+code_classname+" {"+"\n"
 		puppet_file += '    cisco_command_config { "$::hostname configurations":'+"\n"
 		puppet_file += "        command =>"
 		puppet_file += ' "'
@@ -47,7 +49,7 @@ def convert_nexus_config_puppet(request):
 		puppet_file += "}"+"\n"
 		
 		response = HttpResponse(content_type='text/pson')
-		response['Content-Disposition'] = 'attachment; filename="NX_Config.pp"'
+		response['Content-Disposition'] = 'attachment; filename="'+code_filename+'.pp"'
 		response.write(puppet_file)
 		return response
 	else:
@@ -55,7 +57,6 @@ def convert_nexus_config_puppet(request):
 				
 def convert(request):
 	if request.method == "GET":
-		sections = []
 		comments = []
 		code_desc = request.GET["code_desc"]
 		code_host = request.GET["code_host"]

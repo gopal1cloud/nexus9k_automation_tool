@@ -233,14 +233,84 @@ var ThGlobal = {"ajaxurl":"http:\/\/1-cloud.net\/wp-admin\/admin-ajax.php","is_f
 <div id="info-box-40" class=" ffs-six-one ffs-info-box center "><br><br>
 	<img src="http://megaicons.net/static/img/icons_sizes/8/178/512/arrows-right-round-icon.png">
 </div>
-<div id="info-box-83" class=" ffs-four-two ffs-info-box center "><div class="infobox-title" style="font-size: 20px;">Step 2</div>
+<div id="tool_btn_box" class=" ffs-four-two ffs-info-box center "><div class="infobox-title" style="font-size: 20px;">Step 2</div>
 <div class="infobox-text" style="text-align: center; font-size: 13px;">Convert the CLI Command's text file to your choice.</div><br>	
 <div id="tool_box" style="position:relative;text-align: center;">
-	<div class="infobox-title" style="font-size: 30px;"><input id="nxapi_tool_btn" type="button" value="NXAPI"> <input id="puppet_tool_btn" type="button" value="Puppet"> <input id="ansible_tool_btn" type="button" value="Ansible"></div>
-	<form id="cli_convert_form" method="post">
-		<input id="code_file_content" name="code_file_content" type="hidden">
-	</form>
+	<div class="infobox-title" style="font-size: 30px;"><input id="nxapi_tool_btn" type="button" value="NXAPI"><input id="puppet_tool_btn" type="button" value="Puppet"><input id="ansible_tool_btn" type="button" value="Ansible"></div>
 </div>
+</div>
+
+<div class="ffs-four-two ffs-info-box center" id="nxapi_info_box" style="display:none;"><div class="infobox-title" style="font-size: 20px;">Step 3</div>
+<div class="infobox-title" style="text-align: center; font-size: 20px;">NXAPI</div>                 	
+<div class="row">
+<div class="infobox-text" style="text-align: center; font-size: 13px;">Fill the information and convert the CLI Command's text file to NXAPI Switch OFF-Box python script.</div><br>	
+<form id="nxapi_cli_convert_form" method="post">
+    <div class="col-sm-8">
+        <input id="nxapi_code_ip" name="nxapi_code_ip" type="text" placeholder="Switch IP Address">
+            </div>    
+    <div class="col-sm-8">
+        <input id="nxapi_code_username" name="nxapi_code_username" type="text" placeholder="Switch Username">
+    </div>  
+    <div class="col-sm-8">
+        <input id="nxapi_code_password" name="nxapi_code_password" type="text" placeholder="Switch Password">
+    </div>  
+    <div class="col-sm-8">
+        <input id="nxapi_code_filename" name="nxapi_code_filename" type="text" placeholder="Output Filename">.py
+            </div>   <br>
+    <div class="col-sm-8">
+		<input id="nxapi_code_file_content" name="nxapi_code_file_content" type="hidden">
+        <input id="nxapi_code_convert" type="button" value="Convert">
+         <input id="nxapi_cancel_convert" type="button" value="Cancel">
+            </div>  
+
+</form>
+</div>
+</div>
+
+<div class="ffs-content-box" id="puppet_info_box" style="display:none;"><div class="infobox-title" style="font-size: 20px;">Step 3</div>
+<div class="infobox-title" style="text-align: center; font-size: 20px;">Puppet</div>                 	
+<div class="row">
+<div class="infobox-text" style="text-align: center; font-size: 13px;">Fill the information and convert the CLI Command's text file to Puppet manifest.</div><br>
+<form id="puppet_cli_convert_form" method="post">
+    <div class="col-sm-8">
+        <input id="puppet_code_classname" name="puppet_code_classname" type="text" placeholder="Classname">
+            </div>    
+    <div class="col-sm-8">
+        <input id="puppet_code_filename" name="puppet_code_filename" type="text" placeholder="Output Filename">.pp
+            </div>   <br>
+    <div class="col-sm-8">
+		<input id="puppet_code_file_content" name="puppet_code_file_content" type="hidden">
+        <input id="puppet_code_convert" type="button" value="Convert">
+         <input id="puppet_cancel_convert" type="button" value="Cancel">
+            </div>  
+
+</form>
+</div>
+</div>
+	
+<div class="ffs-content-box" id="ansible_info_box" style="display:none;"><div class="infobox-title" style="font-size: 20px;">Step 3</div>
+<div class="infobox-title" style="text-align: center; font-size: 20px;">Ansible</div>                 	
+<div class="row">
+<div class="infobox-text" style="text-align: center; font-size: 13px;">Fill the information and convert the CLI Command's text file to Ansible Playbook.</div><br>
+<form id="ansible_cli_convert_form" method="post">
+    <div class="col-sm-8">
+        <input id="ansible_code_desc" name="ansible_code_desc" type="text" placeholder="Description">
+            </div>        
+    <div class="col-sm-8">
+        <input id="ansible_code_host" name="ansible_code_host" type="text" placeholder="Host">
+            </div>     
+    <div class="col-sm-8">
+        <input id="ansible_code_filename" name="ansible_code_filename" type="text" placeholder="Output Filename">.yml
+            </div>   <br>
+    <div class="col-sm-8">
+		<input id="ansible_code_file_content" name="ansible_code_file_content" type="hidden">
+        <input id="ansible_code_convert" type="button" value="Convert">
+         <input id="ansible_cancel_convert" type="button" value="Cancel">
+            </div>  
+</form>
+</div>
+</div>	
+
 <!--	
 <div class="ffs-content-box">
 <div class="infobox-title" style="text-align: center; font-size: 20px;">Ansible</div>                 	
@@ -260,11 +330,11 @@ var ThGlobal = {"ajaxurl":"http:\/\/1-cloud.net\/wp-admin\/admin-ajax.php","is_f
 		<input id="code_file_content" name="code_file_content" type="hidden">
         <input id="code_convert" type="button" value="Convert">
             </div>  
-</div>
+
 </form>
 </div>
--->
 </div>
+-->
 
 </div>
 
@@ -330,6 +400,10 @@ jQuery("#automation_tools_btn").click( function (){
 	jQuery("#getting_started").hide();
 	jQuery("#automate_tools").fadeIn(400);
 	jQuery("#manual_verify_content").hide();
+	jQuery("#nxapi_info_box").hide();
+	jQuery("#puppet_info_box").hide(400);
+	jQuery("#ansible_info_box").hide();
+	jQuery("#tool_btn_box").fadeIn(400);
 });
 
 jQuery("#back_getting_started_btn").click( function (){
@@ -341,7 +415,37 @@ jQuery("#manual_option_btn").click( function (){
 	jQuery("#manual_verify_content").toggle();
 });
 
+jQuery("#nxapi_cancel_convert").click( function (){
+	jQuery("#nxapi_info_box").hide();
+	jQuery("#tool_btn_box").fadeIn(400);
+});
+
+jQuery("#puppet_cancel_convert").click( function (){
+	jQuery("#puppet_info_box").hide();
+	jQuery("#tool_btn_box").fadeIn(400);
+});
+
+jQuery("#ansible_cancel_convert").click( function (){
+	jQuery("#ansible_info_box").hide();
+	jQuery("#tool_btn_box").fadeIn(400);
+});
+
+jQuery("#nxapi_tool_btn").click( function (){
+	jQuery("#tool_btn_box").hide();
+	jQuery("#nxapi_info_box").fadeIn(400);
+});
+
 jQuery("#puppet_tool_btn").click( function (){
+	jQuery("#tool_btn_box").hide();
+	jQuery("#puppet_info_box").fadeIn(400);
+});
+
+jQuery("#ansible_tool_btn").click( function (){
+	jQuery("#tool_btn_box").hide();
+	jQuery("#ansible_info_box").fadeIn(400);
+});
+
+jQuery("#puppet_code_convert").click( function (){
 	var error_msg = "Please fill the below mentioned information.\n\n";	
 	var error_flag = false;
 	var code_file = jQuery("#code_file").val();	
@@ -353,21 +457,15 @@ jQuery("#puppet_tool_btn").click( function (){
 	if(jQuery.inArray(ext, ['txt']) == -1) {
 		error_msg += " *  Invalid extension for file. Only 'txt' files are supported..\n";
         error_flag = true;
-	}    
-	/*
-	if( jQuery("#code_desc").val() == 0) {
-    error_msg += " * Need to enter the Description.\n";
+	}  
+	if( jQuery("#puppet_code_classname").val() == 0) {
+    error_msg += " * Need to enter the Classname (eg: puppet filename without extension).\n";
     error_flag = true;
     }    
-	if( jQuery("#code_host").val() == 0) {
-    error_msg += " * Need to enter the Host detail.\n";
-    error_flag = true;
-    }    
-	if( jQuery("#code_filename").val() == 0) {
+	if( jQuery("#puppet_code_filename").val() == 0) {
     error_msg += " * Need to enter the Output Filename.\n";
     error_flag = true;
     }	
-    */
 	if( error_flag == true) {
 		alert(error_msg);
 	}
@@ -377,12 +475,14 @@ jQuery("#puppet_tool_btn").click( function (){
 		if (file.type.match("text")) {
 		  var reader = new FileReader();
 		  reader.onload = function(e) {
-			jQuery("#code_file_content").val(reader.result);				
-			var converturl = "nexus_config_puppet/convert/?"+jQuery("form#cli_convert_form").serialize();
+			jQuery("#puppet_code_file_content").val(reader.result);				
+			var converturl = "nexus_config_puppet/convert/?"+jQuery("form#puppet_cli_convert_form").serialize();
 			document.location.href = converturl;
-			jQuery("form#cli_convert_form")[0].reset();	
+			jQuery("form#puppet_cli_convert_form")[0].reset();	
 			jQuery("#code_file").val('');
-			jQuery("#upload-file-info").html('');		
+			jQuery("#upload-file-info").html('');	
+        	jQuery("#puppet_info_box").hide();
+	        jQuery("#tool_btn_box").fadeIn(400);	
 		  }
 		  reader.readAsText(file);  
 		} 				
