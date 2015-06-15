@@ -3,7 +3,6 @@ from django.contrib import admin
 
 urlpatterns = patterns('apps.CLI_Generator.views',
     url(r'^$', 'main'), 
-    url(r'^convert/$', 'convert'), 
     url(r'^nexus_config_csv/download/$', 'download_nexus_config_csv'), 
     url(r'^nexus_config_generator/download/$', 'download_nexus_config_generator'), 
     url(r'^nexus_config_nxapi/convert/$', 'convert_nexus_config_nxapi'), 
