@@ -24,7 +24,35 @@ def download_nexus_config_generator(request):
 	except NexusCLI_Config_Management.DoesNotExist:
 		nexus_config_generator="/"
 	return redirect(nexus_config_generator) 
+
+def convert_nexus_config_puppet(request):
+	if request.method == "GET":
+		commands = []
+		code_file_content = request.GET["code_file_content"]
+		file_data = code_file_content.replace(r"\r\n", r"\n")
+		formated_data = str("\n".join(file_data.splitlines()))
 		
+		for line in formated_data.split('\n'):
+			li = line.strip()
+			commands.append(li)
+			
+		puppet_file = "class cisco_onep::NX_Config {"+"\n"
+		puppet_file += '    cisco_command_config { "$::hostname configurations":'+"\n"
+		puppet_file += "        command =>"
+		puppet_file += ' "'
+		
+		for c in (commands):
+			puppet_file += c
+		puppet_file += '"'+"\n"+"    }"+"\n"
+		puppet_file += "}"+"\n"
+		
+		response = HttpResponse(content_type='text/pson')
+		response['Content-Disposition'] = 'attachment; filename="NX_Config.pp"'
+		response.write(puppet_file)
+		return response
+	else:
+		return HttpResponseForbidden()
+				
 def convert(request):
 	if request.method == "GET":
 		sections = []

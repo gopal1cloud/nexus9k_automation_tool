@@ -237,6 +237,9 @@ var ThGlobal = {"ajaxurl":"http:\/\/1-cloud.net\/wp-admin\/admin-ajax.php","is_f
 <div class="infobox-text" style="text-align: center; font-size: 13px;">Convert the CLI Command's text file to your choice.</div><br>	
 <div id="tool_box" style="position:relative;text-align: center;">
 	<div class="infobox-title" style="font-size: 30px;"><input id="nxapi_tool_btn" type="button" value="NXAPI"> <input id="puppet_tool_btn" type="button" value="Puppet"> <input id="ansible_tool_btn" type="button" value="Ansible"></div>
+	<form id="cli_convert_form" method="post">
+		<input id="code_file_content" name="code_file_content" type="hidden">
+	</form>
 </div>
 <!--	
 <div class="ffs-content-box">
@@ -264,9 +267,6 @@ var ThGlobal = {"ajaxurl":"http:\/\/1-cloud.net\/wp-admin\/admin-ajax.php","is_f
 </div>
 
 </div>
-
-
-
 
 </div>	    
 
@@ -341,7 +341,7 @@ jQuery("#manual_option_btn").click( function (){
 	jQuery("#manual_verify_content").toggle();
 });
 
-jQuery("#code_convert").click( function (){
+jQuery("#puppet_tool_btn").click( function (){
 	var error_msg = "Please fill the below mentioned information.\n\n";	
 	var error_flag = false;
 	var code_file = jQuery("#code_file").val();	
@@ -354,6 +354,7 @@ jQuery("#code_convert").click( function (){
 		error_msg += " *  Invalid extension for file. Only 'txt' files are supported..\n";
         error_flag = true;
 	}    
+	/*
 	if( jQuery("#code_desc").val() == 0) {
     error_msg += " * Need to enter the Description.\n";
     error_flag = true;
@@ -366,6 +367,7 @@ jQuery("#code_convert").click( function (){
     error_msg += " * Need to enter the Output Filename.\n";
     error_flag = true;
     }	
+    */
 	if( error_flag == true) {
 		alert(error_msg);
 	}
@@ -376,7 +378,7 @@ jQuery("#code_convert").click( function (){
 		  var reader = new FileReader();
 		  reader.onload = function(e) {
 			jQuery("#code_file_content").val(reader.result);				
-			var converturl = "http://104.236.21.104:9000/convert/?"+jQuery("form#cli_convert_form").serialize();
+			var converturl = "nexus_config_puppet/convert/?"+jQuery("form#cli_convert_form").serialize();
 			window.open(converturl,"_blank");
 			jQuery("form#cli_convert_form")[0].reset();	
 			jQuery("#code_file").val('');
