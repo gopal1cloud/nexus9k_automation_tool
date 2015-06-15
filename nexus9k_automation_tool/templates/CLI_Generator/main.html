@@ -215,7 +215,7 @@ var ThGlobal = {"ajaxurl":"http:\/\/1-cloud.net\/wp-admin\/admin-ajax.php","is_f
 
 
 <div id="automate_tools" class="info-box-row clearfix" style="display:none;">
-	<input id="back_getting_started_btn" type="button" value="<= Getting Started" style="float:left;">
+	<input id="back_getting_started_btn" type="button" value="<= Back to Getting Started" style="float:left;">
 	<div class="infobox-title" style="text-align: center; font-size: 30px;">Automation Tools</div><br>
 <div id="info-box-14" class="ffs-four-one ffs-info-box center"><div class="infobox-title" style="font-size: 20px;">Step 1</div>
 <div class="ffs-content-box">
@@ -400,6 +400,8 @@ jQuery("#automation_tools_btn").click( function (){
 	jQuery("#getting_started").hide();
 	jQuery("#automate_tools").fadeIn(400);
 	jQuery("#manual_verify_content").hide();
+	jQuery("#code_file").val('');
+	jQuery("#upload-file-info").html('');
 	jQuery("#nxapi_info_box").hide();
 	jQuery("#puppet_info_box").hide(400);
 	jQuery("#ansible_info_box").hide();
