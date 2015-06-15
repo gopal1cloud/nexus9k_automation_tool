@@ -445,6 +445,58 @@ jQuery("#ansible_tool_btn").click( function (){
 	jQuery("#ansible_info_box").fadeIn(400);
 });
 
+jQuery("#nxapi_code_convert").click( function (){
+	var error_msg = "Please fill the below mentioned information.\n\n";	
+	var error_flag = false;
+	var code_file = jQuery("#code_file").val();	
+	if( code_file == 0) {
+    error_msg += " * Need to upload CLI Text file.\n";
+    error_flag = true;
+    }
+	var ext = jQuery('#code_file').val().split('.').pop().toLowerCase();
+	if(jQuery.inArray(ext, ['txt']) == -1) {
+		error_msg += " *  Invalid extension for file. Only 'txt' files are supported..\n";
+        error_flag = true;
+	}  
+	if( jQuery("#nxapi_code_ip").val() == 0) {
+    error_msg += " * Need to enter the Switch IP.\n";
+    error_flag = true;
+    } 
+	if( jQuery("#nxapi_code_username").val() == 0) {
+    error_msg += " * Need to enter the Switch Username.\n";
+    error_flag = true;
+    }   
+	if( jQuery("#nxapi_code_password").val() == 0) {
+    error_msg += " * Need to enter the Switch Password.\n";
+    error_flag = true;
+    }   
+	if( jQuery("#nxapi_code_filename").val() == 0) {
+    error_msg += " * Need to enter the Output Filename.\n";
+    error_flag = true;
+    }	
+	if( error_flag == true) {
+		alert(error_msg);
+	}
+	else{
+		var fileInput = document.getElementById('code_file');
+		var file = fileInput.files[0];
+		if (file.type.match("text")) {
+		  var reader = new FileReader();
+		  reader.onload = function(e) {
+			jQuery("#nxapi_code_file_content").val(reader.result);				
+			var converturl = "nexus_config_nxapi/convert/?"+jQuery("form#nxapi_cli_convert_form").serialize();
+			document.location.href = converturl;
+			jQuery("form#nxapi_cli_convert_form")[0].reset();	
+			jQuery("#code_file").val('');
+			jQuery("#upload-file-info").html('');	
+        	jQuery("#nxapi_info_box").hide();
+	        jQuery("#tool_btn_box").fadeIn(400);	
+		  }
+		  reader.readAsText(file);  
+		} 				
+	}	
+});
+	
 jQuery("#puppet_code_convert").click( function (){
 	var error_msg = "Please fill the below mentioned information.\n\n";	
 	var error_flag = false;
