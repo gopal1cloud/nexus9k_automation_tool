@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from apps.CLI_Generator.models import NexusCLI_Config_Management
+
+admin.site.register(NexusCLI_Config_Management)
