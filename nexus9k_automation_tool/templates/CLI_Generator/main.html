@@ -7,7 +7,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width" />
-<title>Nexus 9000 CLI Config Generator | OneCloud Nexus 9000 Automation Page</title>
+<title>Nexus 9000 CLI Config Generator | OneCloud Nexus 9000 Automation Tool</title>
 <link rel="profile" href="http://gmpg.org/xfn/11" />
 <link rel="pingback" href="http://1-cloud.net/xmlrpc.php" />
 <!--[if lt IE 9]><script src="http://1-cloud.net/wp-content/themes/fruitful/js/html5.js" type="text/javascript"></script><![endif]-->
@@ -165,12 +165,12 @@ var ThGlobal = {"ajaxurl":"http:\/\/1-cloud.net\/wp-admin\/admin-ajax.php","is_f
 <article id="post-3268" class="post-3268 page type-page status-publish hentry">
 			
 	<header class="entry-header">
-		<h1 class="entry-title">OneCloud Nexus 9000 Automation Page</h1>
+		<h1 class="entry-title">OneCloud Nexus 9000 Automation Tool</h1>
 	</header><!-- .entry-header -->
 		<div class="entry-content">
-			
 		
 		<div class="wpb_row vc_row-fluid">
+			<!--
 		    <div id="start_box" class="info-box-row clearfix"> 				
 <div class="ffs-three-one ffs-info-box center" style="position:relative;text-align: center;">
 	<div class="infobox-title" style="font-size: 30px;"><input id="getting_started_btn" type="button" value="Getting Started"></div>
@@ -180,8 +180,8 @@ var ThGlobal = {"ajaxurl":"http:\/\/1-cloud.net\/wp-admin\/admin-ajax.php","is_f
 </div>
 
 </div>	  
-
-<div id="info-box-row-26" class="info-box-row clearfix"> 				
+-->
+<div id="getting_started" class="info-box-row clearfix"> 				
    <div id="info-box-14" class="ffs-one-one ffs-info-box center">
 	<div class="infobox-title" style="text-align: center; font-size: 30px;">Getting Started</div><br>
 	<div class="ffs-two-one ffs-info-box center">
@@ -205,11 +205,69 @@ var ThGlobal = {"ajaxurl":"http:\/\/1-cloud.net\/wp-admin\/admin-ajax.php","is_f
 		<td style="vertical-align:middle;border:0;"><input id="automation_tools_btn" type="button" value="Automate"></td>
 	</tr>
 	</table>
+	<div id="manual_verify_content">
+		Copy the CLI Config commands from the generated text file and paste it on your Nexus switch manually to verify it.
+	</div>
 	</div>
 	</div>
 
 </div>
 </div>
+
+
+<div id="automate_tools" class="info-box-row clearfix">
+	<div class="infobox-title" style="text-align: center; font-size: 30px;">Automation Tools</div><br>
+<div id="info-box-14" class="ffs-four-one ffs-info-box center"><div class="infobox-title" style="font-size: 20px;">Step 1</div>
+<div class="ffs-content-box">
+<div class="infobox-title" style="text-align: center; font-size: 13px;">Nexus CLI Config</div>
+<br>
+  <div style="position:relative;text-align: center;">
+		<a class='btn btn-primary' style="color:#FFF;text-transform:uppercase;" href='javascript:;'>Upload<input id="code_file" type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40"  onchange='jQuery("#upload-file-info").html(jQuery(this).val());'></a>
+		&nbsp;<br><br>
+		<span class='label label-info' id="upload-file-info"></span>
+	</div>
+<br>
+<div class="infobox-text" style="text-align: center; font-size: 13px;">Upload your CLI Command's Text file.</div>
+</div>
+</div>
+<div id="info-box-40" class=" ffs-six-one ffs-info-box center "><br><br>
+	<img src="http://megaicons.net/static/img/icons_sizes/8/178/512/arrows-right-round-icon.png">
+</div>
+<div id="info-box-83" class=" ffs-four-two ffs-info-box center "><div class="infobox-title" style="font-size: 20px;">Step 2</div>
+<div class="infobox-text" style="text-align: center; font-size: 13px;">Convert the CLI Command's text file to your choice.</div>	
+<div id="tool_box" style="position:relative;text-align: center;">
+	<div class="infobox-title" style="font-size: 30px;"><input id="nxapi_tool_btn" type="button" value="NXAPI"></div><br>
+	<div class="infobox-title" style="font-size: 30px;"><input id="puppet_tool_btn" type="button" value="Puppet"></div><br>
+	<div class="infobox-title" style="font-size: 30px;"><input id="chef_tool_btn" type="button" value="Chef"></div><br>
+	<div class="infobox-title" style="font-size: 30px;"><input id="ansible_tool_btn" type="button" value="Ansible"></div>
+</div>
+<!--	
+<div class="ffs-content-box">
+<div class="infobox-title" style="text-align: center; font-size: 20px;">Ansible</div>                 	
+<div class="row">
+<div class="infobox-text" style="text-align: center; font-size: 13px;">Fill the information and convert the CLI Command's text file to Ansible Playbook.</div>	
+<form id="cli_convert_form" method="post">
+    <div class="col-sm-8">
+        <input id="code_desc" name="code_desc" type="text" placeholder="Description">
+            </div>        
+    <div class="col-sm-8">
+        <input id="code_host" name="code_host" type="text" placeholder="Host">
+            </div>     
+    <div class="col-sm-8">
+        <input id="code_filename" name="code_filename" type="text" placeholder="Output Filename">.yml
+            </div>   <br>
+    <div class="col-sm-8">
+		<input id="code_file_content" name="code_file_content" type="hidden">
+        <input id="code_convert" type="button" value="Convert">
+            </div>  
+</div>
+</form>
+</div>
+-->
+</div>
+
+</div>
+
 
 
 
