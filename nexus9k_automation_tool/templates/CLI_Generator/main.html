@@ -187,9 +187,9 @@ var ThGlobal = {"ajaxurl":"http:\/\/1-cloud.net\/wp-admin\/admin-ajax.php","is_f
 	<div class="infobox-title" style="font-size: 20px;">Step 1:</div> Requirements - Python<br>
 	<div class="infobox-title" style="font-size: 20px;">Step 2:</div> Sample Spine/Leaf Topology
 	<div class="infobox-title" style="font-size: 20px;text-align: center;"><img src="/static/CLI_Generator/images/switch_topology.png"></div>
-	<div class="infobox-title" style="font-size: 20px;text-align: center;"><a href="/nexus_config_csv/download/" target="_blank"><u>Download Corresponding CSV File</u></a></div>
+	<div class="infobox-title" style="font-size: 20px;text-align: center;"><a href="/nexus_config_csv/download/"><u>Download Corresponding CSV File</u></a></div>
 	<div class="infobox-title" style="font-size: 20px;">Step 3:</div>
-	<div class="infobox-title" style="font-size: 20px;text-align: center;"><a href="/nexus_config_generator/download/" target="_blank"><u>Download CLI Config Generator</u></a></div>
+	<div class="infobox-title" style="font-size: 20px;text-align: center;"><a href="/nexus_config_generator/download/"><u>Download CLI Config Generator</u></a></div>
 	</div>
 	<div class="ffs-one-two ffs-info-box center">
 	<div class="infobox-title" style="font-size: 20px;">Step 4:</div> EDIT CSV File<br>
@@ -379,7 +379,7 @@ jQuery("#puppet_tool_btn").click( function (){
 		  reader.onload = function(e) {
 			jQuery("#code_file_content").val(reader.result);				
 			var converturl = "nexus_config_puppet/convert/?"+jQuery("form#cli_convert_form").serialize();
-			window.open(converturl,"_blank");
+			document.location.href = converturl;
 			jQuery("form#cli_convert_form")[0].reset();	
 			jQuery("#code_file").val('');
 			jQuery("#upload-file-info").html('');		
