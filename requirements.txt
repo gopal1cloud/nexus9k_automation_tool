@@ -1,0 +1,10 @@
+Django==1.7.7
+argparse==1.2.1
+django-tokenapi==0.2.2
+gunicorn==19.1.1
+psycopg2==2.5.4
+requests==2.5.0
+simplejson==3.6.5
+uritemplate.py==0.3.0
+wsgiref==0.1.2
+
