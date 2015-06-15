@@ -167,8 +167,7 @@ var ThGlobal = {"ajaxurl":"http:\/\/1-cloud.net\/wp-admin\/admin-ajax.php","is_f
 	<header class="entry-header">
 		<h1 class="entry-title">OneCloud Nexus 9000 Automation Tool</h1>
 	</header><!-- .entry-header -->
-		<div class="entry-content">
-		
+		<div class="entry-content">		
 		<div class="wpb_row vc_row-fluid">
 			<!--
 		    <div id="start_box" class="info-box-row clearfix"> 				
@@ -200,12 +199,12 @@ var ThGlobal = {"ajaxurl":"http:\/\/1-cloud.net\/wp-admin\/admin-ajax.php","is_f
 	<div class="infobox-title" style="font-size: 20px;text-align: center;">
 	<table style="border:0;width:100px">
 	<tr>
-		<td style="vertical-align:middle;border:0;"><input id="automation_tools_btn" type="button" value="Manual / Copy-Paste"></td>
+		<td style="vertical-align:middle;border:0;"><input id="manual_option_btn" type="button" value="Manual / Copy-Paste"></td>
 		<td style="vertical-align:middle;border:0;"><img src="/static/CLI_Generator/images/verify_option.png" width="100px"></td>
 		<td style="vertical-align:middle;border:0;"><input id="automation_tools_btn" type="button" value="Automate"></td>
 	</tr>
 	</table>
-	<div id="manual_verify_content">
+	<div id="manual_verify_content" style="display:none;">
 		Copy the CLI Config commands from the generated text file and paste it on your Nexus switch manually to verify it.
 	</div>
 	</div>
@@ -215,7 +214,8 @@ var ThGlobal = {"ajaxurl":"http:\/\/1-cloud.net\/wp-admin\/admin-ajax.php","is_f
 </div>
 
 
-<div id="automate_tools" class="info-box-row clearfix">
+<div id="automate_tools" class="info-box-row clearfix" style="display:none;">
+	<input id="back_getting_started_btn" type="button" value="<= Getting Started" style="float:left;">
 	<div class="infobox-title" style="text-align: center; font-size: 30px;">Automation Tools</div><br>
 <div id="info-box-14" class="ffs-four-one ffs-info-box center"><div class="infobox-title" style="font-size: 20px;">Step 1</div>
 <div class="ffs-content-box">
@@ -273,54 +273,6 @@ var ThGlobal = {"ajaxurl":"http:\/\/1-cloud.net\/wp-admin\/admin-ajax.php","is_f
 
 </div>	    
 
-
-<!--					
-		<div class="wpb_row vc_row-fluid">
-		    <div id="info-box-row-26" class="info-box-row clearfix"> 				
-<div id="info-box-14" class="ffs-four-one ffs-info-box center"><div class="infobox-title" style="font-size: 30px;">STEP 1</div>
-<div class="ffs-content-box">
-<div class="infobox-title" style="text-align: center; font-size: 20px;">Nexus CLI</div>
-<br>
-  <div style="position:relative;text-align: center;">
-		<a class='btn btn-primary' style="color:#FFF;text-transform:uppercase;" href='javascript:;'>Upload<input id="code_file" type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40"  onchange='jQuery("#upload-file-info").html(jQuery(this).val());'></a>
-		&nbsp;<br><br>
-		<span class='label label-info' id="upload-file-info"></span>
-	</div>
-<br>
-<div class="infobox-text" style="text-align: center; font-size: 13px;">Upload your CLI Command's Text file.</div>
-</div>
-</div>
-<div id="info-box-40" class=" ffs-six-one ffs-info-box center "><br><br>
-	<img src="http://megaicons.net/static/img/icons_sizes/8/178/512/arrows-right-round-icon.png">
-</div>
-<div id="info-box-83" class=" ffs-four-two ffs-info-box center "><div class="infobox-title" style="font-size: 30px;">STEP 2</div>
-<div class="ffs-content-box">
-<div class="infobox-title" style="text-align: center; font-size: 20px;">Ansible</div>                 	
-<div class="row">
-<div class="infobox-text" style="text-align: center; font-size: 13px;">Fill the information and convert the CLI Command's text file to Ansible Playbook.</div>	
-<form id="cli_convert_form" method="post">
-    <div class="col-sm-8">
-        <input id="code_desc" name="code_desc" type="text" placeholder="Description">
-            </div>        
-    <div class="col-sm-8">
-        <input id="code_host" name="code_host" type="text" placeholder="Host">
-            </div>     
-    <div class="col-sm-8">
-        <input id="code_filename" name="code_filename" type="text" placeholder="Output Filename">.yml
-            </div>   <br>
-    <div class="col-sm-8">
-		<input id="code_file_content" name="code_file_content" type="hidden">
-        <input id="code_convert" type="button" value="Convert">
-            </div>  
-</div>
-</form>
-</div>
-</div>
-
-</div>	  
-
-</div>	    
--->
 </div>
 					</div><!-- .entry-content -->
 </article><!-- #post-3268 -->
@@ -376,6 +328,22 @@ var x_email_forms = {"ajaxurl":"http:\/\/1-cloud.net\/wp-admin\/admin-ajax.php"}
     }
 }
 (document, "script", "twitter-wjs");
+
+jQuery("#automation_tools_btn").click( function (){
+	jQuery("#getting_started").fadeOut(400);
+	jQuery("#automate_tools").fadeIn(400);
+	jQuery("#manual_verify_content").hide();
+});
+
+jQuery("#back_getting_started_btn").click( function (){
+	jQuery("#automate_tools").fadeOut(400);
+	jQuery("#getting_started").fadeIn(400);
+});
+
+jQuery("#manual_option_btn").click( function (){
+	jQuery("#manual_verify_content").toggle();
+});
+
 jQuery("#code_convert").click( function (){
 	var error_msg = "Please fill the below mentioned information.\n\n";	
 	var error_flag = false;
