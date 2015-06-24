@@ -2,13 +2,24 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponseForbidden, HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import redirect
+from django.conf import settings
 
 from apps.CLI_Generator.models import NexusCLI_Config_Management
+
+import csv
+import re
+import sys
+from StringIO import StringIO  
+from zipfile import ZipFile  
 
 def main(request):
 	ctx = RequestContext(request, {})
 	return render_to_response("CLI_Generator/main.html", context_instance = ctx) 
 
+def new_main(request):
+	ctx = RequestContext(request, {})
+	return render_to_response("CLI_Generator/new_main.html", context_instance = ctx) 
+	
 def download_nexus_config_csv(request):
 	try:
 		nexus_config = NexusCLI_Config_Management.objects.all().order_by('id')[:1]
@@ -116,6 +127,221 @@ def convert_nexus_config_ansible(request):
 		response = HttpResponse(content_type='text/x-yaml')
 		response['Content-Disposition'] = 'attachment; filename="'+code_filename+'.yml"'
 		response.write(yaml_file)
+		return response
+	else:
+		return HttpResponseForbidden()
+
+def convert_nexus_config_cli(request):
+	if request.method == "POST":		
+		try:
+			try:
+				csv_file = request.FILES.get('config_csv', False)
+				reader = csv.DictReader(csv_file)
+			except TypeError:
+				sys.exit(0)
+				
+			print "="*40
+			print "Generating VXLAN CLI Configuration Files"
+			print "="*40
+			print "\n"
+			in_memory = StringIO()  
+			zip = ZipFile(in_memory, "a")  
+			for row in reader:
+				config_content = ""
+				if re.search('Spine(.*)', row['Switch']):
+					config_name = row['Hostname'] + ".txt"						
+					config_content += "! Management IPAddress "+row['Management IPAddress']+"\n"
+					config_content += "nv overlay evpn\n"
+					config_content += "feature ospf\n"
+					config_content += "feature pim\n"
+					config_content += "feature bgp\n"
+					config_content += "feature interface-vlan\n"
+					config_content += "feature nv overlay\n"
+					config_content += "feature vn-segment-vlan-based\n"
+					config_content += "router ospf "+row['Ospf P.ID']+ "\n"
+					config_content += "router-id"+ ' '+row['Ospf Router-id']+ "\n"
+					config_content += "ip pim rp-address "+row['Rp-Address']+ "  group-list "+row['Group-list']+"\n"
+					config_content += "ip pim rp-candidate loopback"+row['2nd Loopback']+" group-list "+row['Group-list']+"\n"
+					config_content += "ip pim anycast-rp "+row['Rp-Address']+' '+row['Ospf Router-id']+"\n"
+					config_content += "ip pim ssm range "+row['Ssm Range']+ "\n"
+				   
+					config_content += "interface loopback"+row['Loopback Number']+ "\n"
+					config_content += "ip address "+row['Ip Addresss Loopback']+ "\n"
+					config_content += "ip router ospf "+row['Ospf P.ID']+ " area 0.0.0.0\n"
+					config_content += "ip pim sparse-mode\n"
+
+					config_content += "interface loopback"+row['2nd Loopback']+ "\n"
+					config_content += "ip address "+row['2nd Loopback Ip Address']+ "\n"
+					config_content += "ip router ospf "+row['Ospf P.ID']+ " area 0.0.0.0\n"
+					config_content += "ip pim sparse-mode\n"
+					
+					for i in range(1, int(row['Interface count'])+1):
+						try: 
+							if (len(row['Interface'+str(i)]) and len(row['Interface '+str(i)+' Ip address'])) == 0:
+								raise IOError
+						except IOError:
+							print "Details of Interface"+str(i)+" are missing for " +row['Hostname']+".txt file. Please don't leave that field empty in Nexus_Config_Parameters.csv file"
+							sys.exit(0)
+
+						config_content += "interface ethernet " +row['Interface'+str(i)]+ "\n"
+						config_content += "no shutdown\n"
+						config_content += "no switchport\n"
+						config_content += "ip address "+row['Interface '+str(i)+' Ip address']+"\n"
+						config_content += "ip router ospf "+row['Ospf P.ID']+ " area 0.0.0.0\n"
+						config_content += "ip pim sparse-mode\n"
+					
+					config_content += "router bgp "+row['BGP-AS-Number']+"\n"
+					config_content += "router-id "+row['BGP-Router-Id']+"\n"
+					
+					for i in range(1, int(row['Interface count'])+1):
+						try:
+							if len(row['Neighbor-'+str(i)]) == 0:
+								raise IOError
+						except IOError:
+							print "Details of Neighbor-"+str(i)+" are missing for " +row['Hostname']+".txt file. Please don't leave that field empty in Nexus_Config_Parameters.csv file"
+							sys.exit(0)
+
+						config_content += "neighbor "+row['Neighbor-'+str(i)]+ " remote-as "+row['BGP-AS-Number']+"\n"
+						config_content += "update-source loopback"+row['Loopback Number']+ "\n"
+						config_content += "address-family ipv4 unicast\n"
+						config_content += "send-community both\n"
+						config_content += "route-reflector-client\n"
+						config_content += "address-family l2vpn evpn\n"
+						config_content += "send-community both\n"
+						config_content += "route-reflector-client\n"
+					
+					config_content += "vrf vrf_tenant_1\n"
+					config_content += "address-family ipv4 unicast\n"
+					config_content += "no advertise l2vpn evpn\n"
+					config_content += "advertise l2vpn evpn\n"
+					zip.writestr(config_name, config_content)   
+					print "   "+row['Hostname'] + ".txt" + " created"
+				
+				elif re.search('Leaf(.*)', row['Switch']):
+					config_name = row['Hostname'] + ".txt"
+					
+					config_content += "! Management IPAddress "+row['Management IPAddress']+"\n"
+					config_content += "nv overlay evpn\n"
+					config_content += "feature ospf\n"
+					config_content += "feature pim\n"
+					config_content += "feature bgp\n"
+					config_content += "feature interface-vlan\n"
+					config_content += "feature nv overlay\n"
+					config_content += "feature vn-segment-vlan-based\n"
+					config_content += "router ospf "+row['Ospf P.ID']+ "\n"
+					config_content += "router-id "+row['Ospf Router-id']+"\n"
+					config_content += "ip pim rp-address "+row['Rp-Address']+" group-list "+row['Group-list']+"\n"
+					config_content += "ip pim ssm range "+row['Ssm Range']+ "\n"
+					
+					config_content += "interface loopback"+row['Loopback Number']+ "\n" 
+					config_content += "ip address "+row['Ip Addresss Loopback']+ "\n" 
+					config_content += "ip router ospf "+row['Ospf P.ID']+ " area 0.0.0.0\n" 
+					config_content += "ip pim sparse-mode\n" 
+					
+					for i in range(1, int(row['Interface count'])+1):
+						try:
+							if (len(row['Interface'+str(i)]) and len(row['Interface '+str(i)+' Ip address'])) == 0:
+								raise IOError
+						except IOError:
+							print "Details of Interface"+str(i)+" are missing for " +row['Hostname']+".txt file. Please don't leave that field empty in Nexus_Config_Parameters.csv file"
+							sys.exit(0)
+
+						config_content += "interface ethernet " +row['Interface'+str(i)]+ "\n" 
+						config_content += "no shutdown\n" 
+						config_content += "no switchport\n"
+						config_content += "ip address "+row['Interface '+str(i)+' Ip address']+"\n" 
+						config_content += "ip router ospf "+row['Ospf P.ID']+ " area 0.0.0.0\n" 
+						config_content += "ip pim sparse-mode\n" 
+
+					config_content += "interface ethernet 1/1\n" 
+
+					config_content += "switchport\n" 
+					config_content += "switchport access vlan "+row['2nd Vlan']+"\n" 
+					config_content += "no shutdown\n" 
+
+					config_content += "vrf context "+row['VRF-member-for-2nd Vlan']+"\n" 
+					config_content += "vni "+row['VNI']+"\n" 
+					config_content += "rd auto\n" 
+					config_content += "address-family ipv4 unicast\n" 
+					config_content += "route-target import "+row['Route Target- Import']+" evpn\n" 
+					config_content += "route-target export "+row['Route Target- Export']+" evpn\n" 
+					config_content += "route-target both auto evpn\n" 
+					
+					config_content += "vlan "+row['1st Vlan']+"\n" 
+					config_content += "name "+row['1st Vlan- Name']+"\n" 
+					config_content += "vn-segment "+row['1st Vlan Vn-Segment']+"\n" 
+					config_content += "no shutdown\n" 
+					config_content += "interface vlan"+row['1st Vlan']+"\n" 
+					config_content += "description l3-vni-for-vrf_tenant_1-routing\n" 
+					config_content += "no shutdown\n" 
+					
+					config_content += "vrf member "+row['VRF-member-for-2nd Vlan']+"\n" 
+					config_content += "ip forward\n" 
+					config_content += "vlan "+row['2nd Vlan']+"\n" 
+					config_content += "no shutdown\n" 
+					config_content += "vn-segment "+row['2nd Vlan Vn-Segment']+"\n" 
+					config_content += "evpn\n" 
+					config_content += "vni "+row['EVPN 1st VNI']+" l2\n" 
+					config_content += "rd auto\n" 
+					config_content += "route-target import auto\n" 
+					config_content += "route-target export auto\n" 
+					config_content += "interface vlan"+row['2nd Vlan']+"\n" 
+					config_content += "no shutdown\n" 
+					 
+					config_content += "vrf member "+row['VRF-member-for-2nd Vlan']+" \n" 
+					config_content += "ip address "+row['Ipaddress-2nd-vlan']+"\n" 
+					config_content += "fabric forwarding mode anycast-gateway\n" 
+					config_content += "fabric forwarding anycast-gateway-mac "+row['Any-cast-mac']+"\n" 
+					config_content += "interface nve"+row['Interface-NVE']+"\n" 
+					config_content += "no shutdown\n" 
+
+					config_content += "source-interface loopback"+row['Loopback Number']+"\n" 
+					config_content += "host-reachability protocol bgp\n" 
+					config_content += "member vni "+row['1st Vlan Vn-Segment']+" associate-vrf\n" 
+					config_content += "member vni "+row['Member-vni']+"\n" 
+					config_content += "suppress-arp\n" 
+					config_content += "mcast-group "+row['Mcast-group']+"\n" 
+					config_content += "router bgp "+row['BGP-AS-Number']+"\n" 
+					config_content += "router-id "+row['Ospf Router-id']+"\n" 
+					
+					for i in range(1, int(row['Interface count'])+1):
+						try:
+							if len(row['Neighbor-'+str(i)]) == 0:
+								raise IOError
+						except IOError:
+							print "Details of Neighbor-"+str(i)+" are missing for " +row['Hostname']+".txt file. Please don't leave that field empty in Nexus_Config_Parameters.csv file"
+							sys.exit(0)
+
+						config_content += "neighbor "+row['Neighbor-1']+" remote-as "+row['BGP-AS-Number']+"\n"
+						config_content += "update-source loopback"+row['Loopback Number']+"\n"
+						config_content += "address-family ipv4 unicast\n"
+						config_content += "send-community both\n"
+						config_content += "address-family l2vpn evpn\n"
+						config_content += "send-community extended\n"
+				   
+					config_content += "vrf "+row['VRF-member-for-2nd Vlan']+"\n"
+					config_content += "address-family ipv4 unicast\n"
+					config_content += "no advertise l2vpn evpn\n"
+					config_content += "advertise l2vpn evpn\n"
+					zip.writestr(config_name, config_content)   
+					print "   "+row['Hostname'] + ".txt" + " created"
+		
+
+			for file in zip.filelist:  
+				file.create_system = 0      
+			zip.close()  
+			response = HttpResponse(content_type="application/zip")  
+			response["Content-Disposition"] = "attachment; filename=Nexus_CLI_Configs.zip"  		
+			in_memory.seek(0)      
+			response.write(in_memory.read())  
+					
+			print "\n"
+			print "="*50
+		except IOError:
+			print "nexus_config_parameters.csv file not found and not able to read"
+			print "Make sure that csv file name must be nexus_config_parameters.csv by default"
+			sys.exit(0)
+		
 		return response
 	else:
 		return HttpResponseForbidden()
