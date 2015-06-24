@@ -60,8 +60,9 @@ def convert_nexus_config_nxapi(request):
 		
 		id=2
 		for line in formated_data.split('\n'):
-			nxapi_file += '        try:\n\n            payload = [{"jsonrpc":"2.0","method":"cli","params":{"cmd":"'+line.strip()+'","version":1},"id":"'+str(id)+'"},]\n            response = requests.post(Nexus_Clean.url,data=json.dumps(payload),headers=Nexus_Clean.myheaders,auth=(username,password)).json()\n        except Exception as e:\n                pass\n\n'
-			id = id + 1
+			if not line.startswith("!"):
+				nxapi_file += '        try:\n\n            payload = [{"jsonrpc":"2.0","method":"cli","params":{"cmd":"'+line.strip()+'","version":1},"id":"'+str(id)+'"},]\n            response = requests.post(Nexus_Clean.url,data=json.dumps(payload),headers=Nexus_Clean.myheaders,auth=(username,password)).json()\n        except Exception as e:\n                pass\n\n'
+				id = id + 1
 			
 		nxapi_file += '\n\n        print "Script execution is Complete!!!"\n\n'
 		nxapi_file += '\n\nif __name__ == \'__main__\':\n    ob = Nexus_Vxlan()\n    ob.nexus_vxlan()\n'
@@ -83,8 +84,9 @@ def convert_nexus_config_puppet(request):
 		formated_data = str("\n".join(file_data.splitlines()))
 		
 		for line in formated_data.split('\n'):
-			li = line.strip()
-			commands.append(li)
+			if not line.startswith("!"):
+				li = line.strip()
+				commands.append(li)
 			
 		puppet_file = "class cisco_onep::"+code_classname+" {"+"\n"
 		puppet_file += '    cisco_command_config { "$::hostname configurations":'+"\n"
@@ -114,8 +116,9 @@ def convert_nexus_config_ansible(request):
 		formated_data = str("\n".join(file_data.splitlines()))
 
 		for line in formated_data.split('\n'):
-			li = line.strip()
-			commands.append(li)
+			if not line.startswith("!"):
+				li = line.strip()
+				commands.append(li)
      
 		yaml_file ='---'+'\n'
 		yaml_file +='# To run this Ansible playbook, issue the following command on the Ansible server:\n#\n# ansible-playbook -i hosts <filename>\n#\n'
