@@ -4,7 +4,7 @@ from django.template import RequestContext
 from django.shortcuts import redirect
 from django.conf import settings
 
-from apps.CLI_Generator.models import NexusCLI_Config_Management, NexusCLI_Conversion_History
+from apps.CLI_Generator.models import NexusCLI_Config_Management
 
 import csv
 import re
