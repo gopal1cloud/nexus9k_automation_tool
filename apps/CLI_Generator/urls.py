@@ -9,5 +9,5 @@ urlpatterns = patterns('apps.CLI_Generator.views',
     url(r'^nexus_config_nxapi/convert/$', 'convert_nexus_config_nxapi'), 
     url(r'^nexus_config_puppet/convert/$', 'convert_nexus_config_puppet'),  
     url(r'^nexus_config_ansible/convert/$', 'convert_nexus_config_ansible'), 
-    url(r'^nexus_config_cli/convert/$', 'convert_nexus_config_cli'), 
+    url(r'^nexus_config_cli/convert/$', 'convert_nexus_config_cli'),  
 )

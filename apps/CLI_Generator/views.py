@@ -4,13 +4,14 @@ from django.template import RequestContext
 from django.shortcuts import redirect
 from django.conf import settings
 
-from apps.CLI_Generator.models import NexusCLI_Config_Management
+from apps.CLI_Generator.models import NexusCLI_Config_Management, NexusCLI_Conversion_History
 
 import csv
 import re
 import sys
 from StringIO import StringIO  
 from zipfile import ZipFile  
+import itertools
 
 def main(request):
 	ctx = RequestContext(request, {})
@@ -135,21 +136,22 @@ def convert_nexus_config_ansible(request):
 		return HttpResponseForbidden()
 
 def convert_nexus_config_cli(request):
-	if request.method == "POST":		
+	if request.method == "GET":		
 		try:
 			try:
-				csv_file = request.FILES.get('config_csv', False)
-				reader = csv.DictReader(csv_file)
+				code_file_content = str(request.GET["config_csv"])
+				file_data = code_file_content.split("^")
+				file_header = file_data[0].split(",")
+				file_content = file_data[1:-1]
+				switch_dict = []
+				for entry in file_content:
+					switch_dict.append(dict(itertools.izip(file_header, entry.split(","))))
 			except TypeError:
 				sys.exit(0)
 				
-			print "="*40
-			print "Generating VXLAN CLI Configuration Files"
-			print "="*40
-			print "\n"
 			in_memory = StringIO()  
 			zip = ZipFile(in_memory, "a")  
-			for row in reader:
+			for row in switch_dict:
 				config_content = ""
 				if re.search('Spine(.*)', row['Switch']):
 					config_name = row['Hostname'] + ".txt"						
@@ -327,19 +329,15 @@ def convert_nexus_config_cli(request):
 					config_content += "no advertise l2vpn evpn\n"
 					config_content += "advertise l2vpn evpn\n"
 					zip.writestr(config_name, config_content)   
-					print "   "+row['Hostname'] + ".txt" + " created"
-		
+					print "   "+row['Hostname'] + ".txt" + " created"		
 
 			for file in zip.filelist:  
 				file.create_system = 0      
 			zip.close()  
 			response = HttpResponse(content_type="application/zip")  
-			response["Content-Disposition"] = "attachment; filename=Nexus_CLI_Configs.zip"  		
-			in_memory.seek(0)      
+			response["Content-Disposition"] = "attachment; filename=Nexus_CLI_Configs.zip" 
+			in_memory.seek(0) 	     
 			response.write(in_memory.read())  
-					
-			print "\n"
-			print "="*50
 		except IOError:
 			print "nexus_config_parameters.csv file not found and not able to read"
 			print "Make sure that csv file name must be nexus_config_parameters.csv by default"
