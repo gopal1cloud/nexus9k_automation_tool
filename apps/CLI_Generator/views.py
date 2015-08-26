@@ -78,11 +78,12 @@ def convert_nexus_config_nxapi(request):
 			nxapi_file += '        try:\n\n            payload = [{"jsonrpc":"2.0","method":"cli","params":{"cmd":"conf t","version":1},"id":1},]\n            response = requests.post(Nexus_Vxlan.url,data=json.dumps(payload),headers=Nexus_Vxlan.myheaders,auth=(username,password)).json()\n        except Exception as e:\n                pass\n\n'
 			
 			id=2
+			nxapi_file += '        try:\n\n            payload = ['
 			for line in formated_data.split('\n'):
 				if not line.startswith("!"):
-					nxapi_file += '        try:\n\n            payload = [{"jsonrpc":"2.0","method":"cli","params":{"cmd":"'+line.strip()+'","version":1},"id":"'+str(id)+'"},]\n            response = requests.post(Nexus_Vxlan.url,data=json.dumps(payload),headers=Nexus_Vxlan.myheaders,auth=(username,password)).json()\n        except Exception as e:\n                pass\n\n'
+					nxapi_file += '{"jsonrpc":"2.0","method":"cli","params":{"cmd":"'+line.strip()+'","version":1},"id":"'+str(id)+'"},'
 					id = id + 1
-				
+			nxapi_file += ']\n            response = requests.post(Nexus_Vxlan.url,data=json.dumps(payload),headers=Nexus_Vxlan.myheaders,auth=(username,password)).json()\n        except Exception as e:\n                pass\n\n'	
 			nxapi_file += '\n\n        print "Script execution is Complete!!!"\n\n'
 			nxapi_file += '\n\nif __name__ == \'__main__\':\n    ob = Nexus_Vxlan()\n    ob.nexus_vxlan()\n'
 			
