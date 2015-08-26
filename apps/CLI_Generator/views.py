@@ -81,7 +81,7 @@ def convert_nexus_config_nxapi(request):
 			nxapi_file += '        try:\n\n            payload = ['
 			for line in formated_data.split('\n'):
 				if not line.startswith("!"):
-					nxapi_file += '{"jsonrpc":"2.0","method":"cli","params":{"cmd":"'+line.strip()+'","version":1},"id":"'+str(id)+'"},'
+					nxapi_file += '{"jsonrpc":"2.0","method":"cli_ascii","params":{"cmd":"'+line.strip()+'","version":1},"id":"'+str(id)+'"},'
 					id = id + 1
 			nxapi_file += ']\n            response = requests.post(Nexus_Vxlan.url,data=json.dumps(payload),headers=Nexus_Vxlan.myheaders,auth=(username,password)).json()\n        except Exception as e:\n                pass\n\n'	
 			nxapi_file += '\n\n        print "Script execution is Complete!!!"\n\n'
@@ -332,8 +332,9 @@ def convert_nexus_config_cli(request):
 					 
 					config_content += "vrf member "+row['VRF-member-for-2nd Vlan']+" \n" 
 					config_content += "ip address "+row['Ipaddress-2nd-vlan']+"\n" 
-					config_content += "fabric forwarding mode anycast-gateway\n" 
 					config_content += "fabric forwarding anycast-gateway-mac "+row['Any-cast-mac']+"\n" 
+					config_content += "interface vlan"+row['2nd Vlan']+"\n" 
+					config_content += "fabric forwarding mode anycast-gateway\n" 
 					config_content += "interface nve"+row['Interface-NVE']+"\n" 
 					config_content += "no shutdown\n" 
 
