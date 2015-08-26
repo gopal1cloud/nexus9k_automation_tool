@@ -75,7 +75,7 @@ def convert_nexus_config_nxapi(request):
 			nxapi_file += '"""\n\nClass to configure the required nexus switch\n"""\n\n\n'
 			nxapi_file += 'class Nexus_Vxlan:\n\n    myheaders = {\'content-type\':\'application/json-rpc\'}\n    headers = {\'content-type\':\'application/json\'}\n\n    url = "http://"+ipaddress+"/ins"\n\n'
 			nxapi_file += '    def nexus_vxlan(self):\n\n        #execute the commands\n\n'
-			nxapi_file += '        try:\n\n            payload = [{"jsonrpc":"2.0","method":"cli","params":{"cmd":"conf t","version":1},"id":1},]\n            response = requests.post(Nexus_Vxlan.url,data=json.dumps(payload),headers=Nexus_Vxlan.myheaders,auth=(username,password)).json()\n        except Exception as e:\n                pass\n\n'
+			nxapi_file += '        try:\n\n            payload = [{"jsonrpc":"2.0","method":"cli_ascii","params":{"cmd":"conf t","version":1},"id":1},]\n            response = requests.post(Nexus_Vxlan.url,data=json.dumps(payload),headers=Nexus_Vxlan.myheaders,auth=(username,password)).json()\n        except Exception as e:\n                pass\n\n'
 			
 			id=2
 			nxapi_file += '        try:\n\n            payload = ['
