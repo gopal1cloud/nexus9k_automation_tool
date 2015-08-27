@@ -355,7 +355,7 @@ def convert_nexus_config_cli(request):
 							print "Details of Neighbor-"+str(i)+" are missing for " +row['Hostname']+".txt file. Please don't leave that field empty in Nexus_Config_Parameters.csv file"
 							sys.exit(0)
 
-						config_content += "neighbor "+row['Neighbor-1']+" remote-as "+row['BGP-AS-Number']+"\n"
+						config_content += "neighbor "+row['Neighbor-'+str(i)]+" remote-as "+row['BGP-AS-Number']+"\n"
 						config_content += "update-source loopback"+row['Loopback Number']+"\n"
 						config_content += "address-family ipv4 unicast\n"
 						config_content += "send-community both\n"
